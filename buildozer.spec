@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,ttc,json,csv
 source.include_patterns = static/fonts/*.ttf,static/*.png
 version = 18.0
 
-# ✅ Оставляем только чистый Python
+# ✅ Чистый Python, без проблемных библиотек
 requirements = python3,kivy,plyer,pillow,certifi
 
 p4a.branch = master
@@ -17,10 +17,10 @@ fullscreen = 0
 icon.filename = %(source.dir)s/static/icon.png
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
-# ✅ ЖЕСТКИЙ ОТКАТ: NDK 21b лучше всего работает с libffi
+# ✅ ВОЗВРАЩАЕМ NDK 25b (он нужен p4a) + явно указываем ndk_api
 android.api = 28
 android.minapi = 21
-android.ndk = 21b
+android.ndk = 25b
 android.ndk_api = 21
 
 android.archs = arm64-v8a
