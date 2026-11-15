@@ -10,7 +10,16 @@ formal_name = "Betting PRO"
 description = "Аналитика спортивных ставок"
 sources = ["src/betting_pro"]
 test_sources = ["tests"]
-requires = ["toga"]  # sqlite3 встроен в Python, но toga обязательна
+# ✅ Toga обязательна для интерфейса
+requires = ["toga"]
 
 [tool.briefcase.app.betting_pro.android]
-requires = []
+# ✅ Дублируем Toga для Android, чтобы Briefcase точно упаковал её в APK
+requires = ["toga"]
+
+# ✅ ГЛАВНЫЙ ФИКС: Явно указываем архитектуры (и старые, и новые телефоны)
+# Это заставит Briefcase собрать универсальный APK
+android_abis = ["arm64-v8a", "armeabi-v7a"]
+
+# ✅ Минимальная версия Android (7.0), чтобы приложение не падало на старых системах
+min_os_version = "24"
