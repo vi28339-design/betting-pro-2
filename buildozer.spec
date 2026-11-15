@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,ttc,json,csv
 source.include_patterns = static/fonts/*.ttf,static/*.png
 version = 18.0
 
-# ✅ УБРАЛИ plyer и pillow. Оставили только самое необходимое.
+# ✅ Только необходимое, чтобы не перегружать память сервера
 requirements = python3,kivy,certifi
 
 p4a.branch = master
@@ -17,10 +17,10 @@ fullscreen = 0
 icon.filename = %(source.dir)s/static/icon.png
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
-# ✅ Оставляем старые версии, которые дали прогресс
+# ✅ Правильная связка: NDK 25b + ndk_api 21
 android.api = 28
 android.minapi = 21
-android.ndk = 21b
+android.ndk = 25b
 android.ndk_api = 21
 
 android.archs = arm64-v8a
