@@ -4,15 +4,16 @@ from toga.style.pack import COLUMN
 import traceback
 import os
 from .model import predict_hockey, poisson_over
-from .database import db
+from .database import DB
 
 class BettingPro(toga.App):
     def startup(self):
         try:
-            main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))
+            # ✅ Инициализируем БД с путями приложения
+            self.db = DB(self.paths)
 
-            title = toga.Label("🏒 Betting PRO", style=Pack(font_size=24, font_weight="bold", margin_bottom=20))
-            main_box.add(title)
+            main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))
+            main_box.add(toga.Label("🏒 Betting PRO", style=Pack(font_size=24, font_weight="bold", margin_bottom=20)))
 
             self.input_team1 = toga.TextInput(placeholder="К1: Забитые (напр. 5.2)", style=Pack(margin_bottom=10))
             self.input_team2 = toga.TextInput(placeholder="К2: Забитые (напр. 4.8)", style=Pack(margin_bottom=10))
@@ -33,14 +34,12 @@ class BettingPro(toga.App):
             self.main_window.show()
 
         except Exception as e:
-            # ✅ Если приложение падает при старте, пишем лог в файл
+            # ✅ Ловим ошибку и пишем в файл
             error_text = traceback.format_exc()
-            # Папка данных приложения на Android
             path = os.path.join(self.paths.data, "crash_log.txt")
             with open(path, "w", encoding="utf-8") as f:
                 f.write(error_text)
             
-            # Пытаемся показать окно с ошибкой
             try:
                 self.main_window = toga.MainWindow(title="Ошибка")
                 self.main_window.content = toga.Label(f"Ошибка: смотрите crash_log.txt", style=Pack(padding=20))
@@ -50,13 +49,9 @@ class BettingPro(toga.App):
 
     def calculate(self, widget):
         try:
-            t1_str = self.input_team1.value or "0"
-            t2_str = self.input_team2.value or "0"
-            line_str = self.input_line.value or "0"
-            
-            t1 = float(t1_str)
-            t2 = float(t2_str)
-            line = float(line_str)
+            t1 = float(self.input_team1.value or 0)
+            t2 = float(self.input_team2.value or 0)
+            line = float(self.input_line.value or 0)
 
             if line <= 0:
                 self.result_label.text = "Ошибка: линия должна быть больше 0!"
@@ -74,7 +69,7 @@ class BettingPro(toga.App):
                 rec = "НЕТ СИГНАЛА (Пропустить)"
 
             self.result_label.text = f"{rec}\nОжидаемый тотал: {r['total_exp']:.2f}"
-            db.save_prediction("Хоккей", "К1", "К2", line, rec)
+            self.db.save_prediction("Хоккей", "К1", "К2", line, rec)
 
         except ValueError:
             self.result_label.text = "Ошибка: введите числа!"
