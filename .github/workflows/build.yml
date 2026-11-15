@@ -1,4 +1,4 @@
-name: Build Android App
+name: Build APK
 
 on:
   push:
@@ -10,25 +10,27 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-
-      - name: Install dependencies
+          python-version: '3.10'
+      - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y openjdk-17-jdk
-          pip install briefcase
-          
-      - name: Build Android APK
+          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool \
+            pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 \
+            cmake libffi-dev libssl-dev automake
+      - name: Install Buildozer
         run: |
-          briefcase create android
-          briefcase build android
-
+          pip install --upgrade pip
+          pip install buildozer cython==0.29.36
+      - name: Build APK
+        run: |
+          rm -rf ~/.buildozer
+          rm -rf .buildozer
+          buildozer -v android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: betting-pro-apk
-          path: android/gradle/app/build/outputs/apk/debug/app-debug.apk
+          path: bin/*.apk
