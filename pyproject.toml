@@ -1,0 +1,17 @@
+[tool.briefcase]
+project_name = "Betting PRO"
+bundle = "com.bettingpro"
+version = "1.0.0"
+url = "https://github.com/твой_логин/betting-pro"
+license.file = "LICENSE"
+
+[tool.briefcase.app.betting_pro]
+formal_name = "Betting PRO"
+description = "Аналитика спортивных ставок"
+icon = "src/betting_pro/resources/icon"
+sources = ["src/betting_pro"]
+test_sources = ["tests"]
+requires = []
+
+[tool.briefcase.app.betting_pro.android]
+requires = []
