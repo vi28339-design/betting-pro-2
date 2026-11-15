@@ -25,14 +25,22 @@ jobs:
         run: |
           pip install briefcase
 
+      # ✅ СОЗДАЕМ КЛЮЧ ПОДПИСИ (Keystore)
+      - name: Generate Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload-key -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+
+      # ✅ СОБИРАЕМ APK (Briefcase сам подпишет его, если найдет ключ)
       - name: Build Android APK
         run: |
           briefcase create android
           briefcase build android
 
+      # ✅ ЗАГРУЖАЕМ APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: betting-pro-apk
-          # ✅ ИСПРАВЛЕНО: правильный путь к APK, который создает Briefcase
+          # Путь к APK, который создает Briefcase
           path: build/betting_pro/android/gradle/app/build/outputs/apk/debug/app-debug.apk
