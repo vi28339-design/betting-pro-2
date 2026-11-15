@@ -1,15 +1,22 @@
-import toga
-from toga.style import Pack
-from toga.style.pack import COLUMN
 import traceback
 import os
+
+try:
+    import toga
+    from toga.style import Pack
+    from toga.style.pack import COLUMN
+except ImportError as e:
+    # Если Toga не установлена, приложение упадет, но мы хотя бы попытаемся записать это
+    print(f"Критическая ошибка: Toga не установлена. {e}")
+    raise
+
 from .model import predict_hockey, poisson_over
 from .database import DB
 
 class BettingPro(toga.App):
     def startup(self):
         try:
-            # ✅ Инициализируем БД с путями приложения
+            # ✅ Инициализация БД с путями приложения
             self.db = DB(self.paths)
 
             main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))
@@ -33,25 +40,36 @@ class BettingPro(toga.App):
             self.main_window.content = main_box
             self.main_window.show()
 
-        except Exception as e:
+        except Exception:
             # ✅ Ловим ошибку и пишем в файл
             error_text = traceback.format_exc()
-            path = os.path.join(self.paths.data, "crash_log.txt")
-            with open(path, "w", encoding="utf-8") as f:
-                f.write(error_text)
+            # Пытаемся записать в доступную папку (Documents)
+            try:
+                path = os.path.join(self.paths.documents, "crash_log.txt")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(error_text)
+                error_msg = f"Ошибка: смотрите {path}"
+            except Exception:
+                error_msg = "Критическая ошибка при запуске."
             
+            # Пытаемся показать окно с ошибкой
             try:
                 self.main_window = toga.MainWindow(title="Ошибка")
-                self.main_window.content = toga.Label(f"Ошибка: смотрите crash_log.txt", style=Pack(padding=20))
+                self.main_window.content = toga.Label(error_msg, style=Pack(padding=20))
                 self.main_window.show()
             except Exception:
                 pass
 
     def calculate(self, widget):
         try:
-            t1 = float(self.input_team1.value or 0)
-            t2 = float(self.input_team2.value or 0)
-            line = float(self.input_line.value or 0)
+            # ✅ Безопасное получение чисел
+            val1 = self.input_team1.value
+            val2 = self.input_team2.value
+            val_line = self.input_line.value
+
+            t1 = float(val1) if val1 and str(val1).strip() else 0.0
+            t2 = float(val2) if val2 and str(val2).strip() else 0.0
+            line = float(val_line) if val_line and str(val_line).strip() else 0.0
 
             if line <= 0:
                 self.result_label.text = "Ошибка: линия должна быть больше 0!"
@@ -72,7 +90,9 @@ class BettingPro(toga.App):
             self.db.save_prediction("Хоккей", "К1", "К2", line, rec)
 
         except ValueError:
-            self.result_label.text = "Ошибка: введите числа!"
+            self.result_label.text = "Ошибка: введите корректные числа!"
+        except Exception as e:
+            self.result_label.text = f"Ошибка: {e}"
 
 def main():
     return BettingPro()
