@@ -10,7 +10,7 @@ formal_name = "Betting PRO"
 description = "Аналитика спортивных ставок"
 sources = ["src/betting_pro"]
 test_sources = ["tests"]
-requires = ["toga"]  # ✅ ОБЯЗАТЕЛЬНО для BeeWare
+requires = ["toga"]  # sqlite3 встроен в Python, но toga обязательна
 
 [tool.briefcase.app.betting_pro.android]
 requires = []
