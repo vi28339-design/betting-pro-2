@@ -2,9 +2,13 @@ import sqlite3
 import os
 
 class DB:
-    def __init__(self):
-        self.db_path = os.path.join(os.path.expanduser("~"), "betting.db")
-        self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
+    def __init__(self, app_paths):
+        # ✅ Используем правильную папку для Android
+        self.data_dir = app_paths.data
+        self.data_dir.mkdir(exist_ok=True, parents=True)
+        self.db_path = self.data_dir / "betting.db"
+        
+        self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
         self._init()
 
     def _init(self):
@@ -28,4 +32,5 @@ class DB:
         except Exception as e:
             print(f"Ошибка БД: {e}")
 
-db = DB()
+# ✅ Убираем глобальный db = DB(), чтобы не было ошибки при старте
+# db = DB() 
