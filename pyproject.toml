@@ -10,9 +10,9 @@ formal_name = "Betting PRO"
 description = "Аналитика спортивных ставок"
 sources = ["src/betting_pro"]
 test_sources = ["tests"]
-requires = ["toga"]
+requires = ["toga==0.4.8"]
 
 [tool.briefcase.app.betting_pro.android]
-requires = ["toga"]
+requires = ["toga-android==0.4.8"]
 android_abis = ["armeabi-v7a"]
-min_os_version = "24"
+min_os_version = "21"
