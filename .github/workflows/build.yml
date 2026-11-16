@@ -14,7 +14,6 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          # ✅ ИСПОЛЬЗУЕМ PYTHON 3.11 (самый стабильный для Briefcase)
           python-version: '3.11'
 
       - name: Install System Dependencies
@@ -23,8 +22,7 @@ jobs:
           sudo apt install -y openjdk-17-jdk
 
       - name: Install Briefcase
-        run: |
-          pip install briefcase
+        run: pip install briefcase
 
       - name: Build Android APK
         run: |
