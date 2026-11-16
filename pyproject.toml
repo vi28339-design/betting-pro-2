@@ -14,5 +14,5 @@ requires = ["toga"]
 
 [tool.briefcase.app.betting_pro.android]
 requires = ["toga"]
-android_abis = ["arm64-v8a", "armeabi-v7a"]
+android_abis = ["arm64-v8a"]
 min_os_version = "24"
