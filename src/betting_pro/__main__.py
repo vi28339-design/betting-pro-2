@@ -1,4 +1,57 @@
-from .app import main
+import os
+import traceback
 
-if __name__ == "__main__":
-    main().main_loop()
+
+def _log(msg):
+    # Пишем в Documents (видно в проводнике на многих прошивках)
+    for base in ("/storage/emulated/0/Documents/", "/sdcard/Documents/"):
+        try:
+            os.makedirs(base, exist_ok=True)
+            p = os.path.join(base, "bettingpro_crash.txt")
+            with open(p, "a") as f:
+                f.write(msg + "\n")
+            return
+        except Exception:
+            continue
+
+
+_log("import: module top reached")
+
+import toga
+from toga.style import Pack
+from toga.style.pack import COLUMN
+
+
+class BettingPro(toga.App):
+    def startup(self):
+        _log("startup: begin")
+        try:
+            main_box = toga.Box(style=Pack(direction=COLUMN, padding=20, alignment="center"))
+
+            title = toga.Label("ТЕСТ УСПЕШЕН", style=Pack(font_size=24, font_weight="bold", margin_bottom=20))
+            main_box.add(title)
+
+            btn = toga.Button("Нажми меня", on_press=self.on_press, style=Pack(padding=10))
+            main_box.add(btn)
+
+            self.result = toga.Label("Ожидание нажатия...", style=Pack(font_size=16, margin_top=20))
+            main_box.add(self.result)
+
+            self.main_window = toga.MainWindow(title="Test App")
+            self.main_window.content = main_box
+            self.main_window.show()
+            _log("startup: ok")
+        except Exception:
+            _log("startup: EXCEPTION\n" + traceback.format_exc())
+            raise
+
+    def on_press(self, widget):
+        try:
+            self.result.text = "Кнопка работает!"
+        except Exception:
+            _log("on_press: EXCEPTION\n" + traceback.format_exc())
+
+
+def main():
+    _log("main(): called")
+    return BettingPro()
