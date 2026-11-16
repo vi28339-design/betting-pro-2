@@ -11,9 +11,9 @@ description = "Аналитика спортивных ставок"
 app_id = "com.bettingpro.app"
 sources = ["src/betting_pro"]
 test_sources = ["tests"]
-requires = ["toga==0.4.8"]
+requires = ["toga~=0.5.6"]
 
 [tool.briefcase.app.betting_pro.android]
-requires = ["toga==0.4.8"]
+requires = ["toga-android~=0.5.6"]
 android_abis = ["arm64-v8a", "armeabi-v7a"]
 min_os_version = "24"
