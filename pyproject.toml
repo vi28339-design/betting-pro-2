@@ -2,24 +2,18 @@
 project_name = "Betting PRO"
 bundle = "com.bettingpro"
 version = "1.0.0"
-url = "https://github.com/твой_логин/betting-pro"
+url = "https://github.com/vi28339-design/betting-pro-2"
 license.file = "LICENSE"
 
 [tool.briefcase.app.betting_pro]
 formal_name = "Betting PRO"
 description = "Аналитика спортивных ставок"
+app_id = "com.bettingpro.app"
 sources = ["src/betting_pro"]
 test_sources = ["tests"]
-# ✅ Toga обязательна для интерфейса
-requires = ["toga"]
+requires = ["toga==0.4.8"]
 
 [tool.briefcase.app.betting_pro.android]
-# ✅ Дублируем Toga для Android, чтобы Briefcase точно упаковал её в APK
-requires = ["toga"]
-
-# ✅ ГЛАВНЫЙ ФИКС: Явно указываем архитектуры (и старые, и новые телефоны)
-# Это заставит Briefcase собрать универсальный APK
+requires = ["toga==0.4.8"]
 android_abis = ["arm64-v8a", "armeabi-v7a"]
-
-# ✅ Минимальная версия Android (7.0), чтобы приложение не падало на старых системах
 min_os_version = "24"
