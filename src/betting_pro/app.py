@@ -1,6 +1,10 @@
 import os
 import traceback
 
+import toga
+from toga.style import Pack
+from toga.style.pack import COLUMN
+
 
 def _log(msg):
     for base in ("/storage/emulated/0/Documents/", "/sdcard/Documents/"):
@@ -14,45 +18,34 @@ def _log(msg):
             continue
 
 
-_log("import: module top reached")
+_log("RUN START " + str(__import__("time").time()))
 
-try:
-    import toga
-    _log("import: toga OK")
-    from toga.style import Pack
-    from toga.style.pack import COLUMN
-    _log("import: styles OK")
-except Exception:
-    _log("import: EXCEPTION at import toga\n" + traceback.format_exc())
-    raise
+import toga
+_log("import toga OK")
 
 
 class BettingPro(toga.App):
     def startup(self):
-        _log("startup: begin")
+        _log("startup begin")
         try:
-            main_box = toga.Box(style=Pack(direction=COLUMN, padding=20, alignment="center"))
-            title = toga.Label("ТЕСТ УСПЕШЕН", style=Pack(font_size=24, font_weight="bold", margin_bottom=20))
+            self.main_window = toga.MainWindow(title="Test App")
+            main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))
+            title = toga.Label("ТЕСТ УСПЕШЕН", style=Pack(font_size=24, font_weight="bold"))
             main_box.add(title)
             btn = toga.Button("Нажми меня", on_press=self.on_press, style=Pack(padding=10))
             main_box.add(btn)
-            self.result = toga.Label("Ожидание нажатия...", style=Pack(font_size=16, margin_top=20))
+            self.result = toga.Label("Ожидание нажатия...", style=Pack(font_size=16))
             main_box.add(self.result)
-            self.main_window = toga.MainWindow(title="Test App")
             self.main_window.content = main_box
             self.main_window.show()
-            _log("startup: ok")
+            _log("startup ok, window shown")
         except Exception:
-            _log("startup: EXCEPTION\n" + traceback.format_exc())
+            _log("startup EXCEPTION\n" + traceback.format_exc())
             raise
 
     def on_press(self, widget):
-        try:
-            self.result.text = "Кнопка работает!"
-        except Exception:
-            _log("on_press: EXCEPTION\n" + traceback.format_exc())
+        self.result.text = "Кнопка работает!"
 
 
 def main():
-    _log("main(): called")
     return BettingPro()
