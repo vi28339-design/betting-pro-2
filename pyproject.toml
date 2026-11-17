@@ -13,6 +13,6 @@ test_sources = ["tests"]
 requires = ["toga"]
 
 [tool.briefcase.app.betting_pro.android]
-requires = ["toga"]
+requires = ["toga", "toga-android"]
 android_abis = ["armeabi-v7a"]
 min_os_version = "24"
